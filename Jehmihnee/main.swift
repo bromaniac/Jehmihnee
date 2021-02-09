@@ -4,7 +4,10 @@
 //
 //  Created by Fredrik Broman on 2021-02-05.
 //
+//  Inspired by a post by Eskimo in this thread: https://developer.apple.com/forums/thread/116723
+//
 
+import ArgumentParser
 import Foundation
 import Network
 
@@ -55,11 +58,10 @@ class Main {
     }
 
     private func startReceive() {
-        self.connection.receive(minimumIncompleteLength: 1, maximumLength: 65536) { data, _, isDone, error in
+        self.connection.receiveMessage { (data, _, isDone, error) in
             if let data = data, !data.isEmpty {
-                //NSLog("did receive, data: %@", data as NSData)
-                let str = String(data: data, encoding: .utf8)
-                NSLog("did receive, data: %@", str ?? "foo")
+                let datastring = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+                print(datastring as Any)
             }
             if let error = error {
                 NSLog("did receive, error: %@", "\(error)")
@@ -87,6 +89,7 @@ class Main {
         })
     }
 
+    // Ignore self signed certs https://developer.apple.com/forums/thread/104018
     static private func getTLSParameters(allowInsecure: Bool, queue: DispatchQueue) -> NWParameters {
         let options = NWProtocolTLS.Options()
 
@@ -110,14 +113,19 @@ class Main {
         return NWParameters(tls: options)
     }
 
-    static func run() -> Never {
-        let m = Main(hostName: "gemini.circumlunar.space", port: 1965)
+    static func run(opts: Opts) -> Never {
+        let m = Main(hostName: opts.url, port: 1965)
         m.start()
 
-        m.send(line: "gemini://gemini.circumlunar.space/")
+        m.send(line: "gemini://" + opts.url + "/")
         dispatchMain()
     }
 }
 
-Main.run()
+struct Opts: ParsableArguments {
+    @Argument(help: "gemini url") var url: String
+}
 
+let options = Opts.parseOrExit()
+
+Main.run(opts: options)
