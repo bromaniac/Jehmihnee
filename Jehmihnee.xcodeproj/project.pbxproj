@@ -3,11 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0D88108B25CDFF9600DF7BB1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D88108A25CDFF9600DF7BB1 /* main.swift */; };
+		0DF6D87F25CE8F6000DFED0C /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 0DF6D87E25CE8F6000DFED0C /* ArgumentParser */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DF6D87F25CE8F6000DFED0C /* ArgumentParser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +80,9 @@
 			dependencies = (
 			);
 			name = Jehmihnee;
+			packageProductDependencies = (
+				0DF6D87E25CE8F6000DFED0C /* ArgumentParser */,
+			);
 			productName = Jehmihnee;
 			productReference = 0D88108725CDFF9600DF7BB1 /* Jehmihnee */;
 			productType = "com.apple.product-type.tool";
@@ -105,6 +110,9 @@
 				Base,
 			);
 			mainGroup = 0D88107E25CDFF9600DF7BB1;
+			packageReferences = (
+				0DF6D87D25CE8F6000DFED0C /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+			);
 			productRefGroup = 0D88108825CDFF9600DF7BB1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -281,6 +289,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0DF6D87D25CE8F6000DFED0C /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0DF6D87E25CE8F6000DFED0C /* ArgumentParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0DF6D87D25CE8F6000DFED0C /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0D88107F25CDFF9600DF7BB1 /* Project object */;
 }
