@@ -52,7 +52,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "gemini://gemini.circumlunar.space/"
+            argument = "gemini.circumlunar.space"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
