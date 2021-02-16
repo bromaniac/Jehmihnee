@@ -33,7 +33,7 @@ class Main {
     func stop() {
         self.connection.cancel()
         NSLog("did stop")
-        exit(0)
+        exit(EXIT_SUCCESS)
     }
 
     private func didChange(state: NWConnection.State) {
@@ -60,7 +60,7 @@ class Main {
     private func startReceive() {
         self.connection.receiveMessage { (data, _, isDone, error) in
             if let data = data, !data.isEmpty {
-                let datastring = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+                let datastring = NSString(data: data, encoding: String.Encoding.utf8.rawValue)!
                 print(datastring as Any)
             }
             if let error = error {
@@ -90,6 +90,7 @@ class Main {
     }
 
     // Ignore self signed certs https://developer.apple.com/forums/thread/104018
+    // TODO: https://drewdevault.com/2020/09/21/Gemini-TOFU.html
     static private func getTLSParameters(allowInsecure: Bool, queue: DispatchQueue) -> NWParameters {
         let options = NWProtocolTLS.Options()
 
@@ -114,18 +115,35 @@ class Main {
     }
 
     static func run(opts: Opts) -> Never {
-        let m = Main(hostName: opts.url, port: 1965)
+        guard let url = URL(string: opts.url) else {
+            print("Could not parse argument as URL")
+            exit(EXIT_FAILURE)
+        }
+
+        guard url.scheme == "gemini" else {
+            print("Only gemini:// protocol supported")
+            exit(EXIT_FAILURE)
+        }
+
+        let m = Main(hostName: url.host!, port: opts.port ?? 1965)
         m.start()
 
-        m.send(line: "gemini://" + opts.url + "/")
+        m.send(line: url.absoluteString)
         dispatchMain()
     }
 }
 
 struct Opts: ParsableArguments {
     @Argument(help: "gemini url") var url: String
+    @Argument(help: "gemini port, default 1965") var port: Int?
+    @Flag(help: "Show verbose output") var verbose = false
 }
 
 let options = Opts.parseOrExit()
+
+guard options.url.count < 1024 else {
+    print("URL must be shorter than 1024 chars")
+    exit(EXIT_FAILURE)
+}
 
 Main.run(opts: options)
